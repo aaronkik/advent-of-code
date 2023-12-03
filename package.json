@@ -2,10 +2,8 @@
   "name": "advent-of-code",
   "version": "1.0.0",
   "description": "Advent of Code",
-  "main": "index.js",
-  "type": "module",
   "scripts": {
-    "build": "tsc && esbuild src/index.ts --bundle --platform=node --outdir=dist",
+    "start": "ts-node $1",
     "lint": "eslint . --color --ext .ts",
     "prettier": "prettier --check .",
     "watch": "tsc -w",
