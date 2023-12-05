@@ -5,6 +5,7 @@ const inputPath = resolve(__dirname, "input.txt");
 
 const symbolRegex = new RegExp("[^\\w.]", "g");
 const digitRegex = new RegExp("\\d+", "g");
+const gearRegex = new RegExp("\\*", "g");
 
 const getSymbolLocations = (result: string) => [...result.matchAll(symbolRegex)].map((value) => Number(value.index));
 
