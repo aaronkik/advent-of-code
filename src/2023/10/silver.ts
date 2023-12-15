@@ -91,57 +91,6 @@ const constructVistedTilesMatrix = (tiles: Array<string>) => {
   });
 };
 
-// const getValidSurroundingTiles = ({
-//   tileLocation,
-//   tiles,
-//   isOutOfBounds,
-// }: {
-//   tileLocation: Location;
-//   tiles: ReturnType<typeof constructVistedTilesMatrix>;
-//   isOutOfBounds: (location: Location) => boolean;
-// }) => {
-//   const { x, y } = tileLocation;
-//   const northLocation = { x, y: y - 1 };
-//   const eastLocation = { x: x + 1, y };
-//   const southLocation = { x, y: y + 1 };
-//   const westLocation = { x: x - 1, y };
-
-//   const isNorthLocationValid = !isOutOfBounds(northLocation);
-//   const northChar = isNorthLocationValid ? tiles[northLocation.y][northLocation.x].char : undefined;
-//   const northCharVisited = isNorthLocationValid ? tiles[northLocation.y][northLocation.x].visited : undefined;
-
-//   const isEastLocationValid = !isOutOfBounds(eastLocation);
-//   const eastChar = isEastLocationValid ? tiles[eastLocation.y][eastLocation.x].char : undefined;
-//   const eastCharVisited = isEastLocationValid ? tiles[eastLocation.y][eastLocation.x].visited : undefined;
-
-//   const isSouthLocationValid = !isOutOfBounds(southLocation);
-//   const southChar = isSouthLocationValid ? tiles[southLocation.y][southLocation.x].char : undefined;
-//   const southCharVisited = isSouthLocationValid ? tiles[southLocation.y][southLocation.x].visited : undefined;
-
-//   const isWestLocationValid = !isOutOfBounds(westLocation);
-//   const westChar = isWestLocationValid ? tiles[westLocation.y][westLocation.x].char : undefined;
-//   const westCharVisited = isWestLocationValid ? tiles[westLocation.y][westLocation.x].visited : undefined;
-
-//   return {
-//     ...(northChar &&
-//       !isStartingPoint(northChar) &&
-//       isTile(northChar) &&
-//       !northCharVisited && { north: { tile: northChar, location: northLocation } }),
-//     ...(eastChar &&
-//       !isStartingPoint(eastChar) &&
-//       isTile(eastChar) &&
-//       !eastCharVisited && { east: { tile: eastChar, location: eastLocation } }),
-//     ...(southChar &&
-//       !isStartingPoint(southChar) &&
-//       isTile(southChar) &&
-//       !southCharVisited && { south: { tile: southChar, location: southLocation } }),
-//     ...(westChar &&
-//       !isStartingPoint(westChar) &&
-//       isTile(westChar) &&
-//       !westCharVisited && { west: { tile: westChar, location: westLocation } }),
-//   };
-// };
-
 const run = async () => {
   const input = await readTextFileByPath(inputPath);
   const tilesSplitByNewLine = input.split("\n");
@@ -268,26 +217,11 @@ const run = async () => {
     const i = (iteration += 1);
     const surTiles = Object.entries(surroundingValidTiles);
 
-    // if (surTiles.length === 0) {
-    //   completedTraversal.push(visitedTilesMatrix);
-    //   return;
-    // }
-
     for (let index = 0; index < surTiles.length; index++) {
       const [, tile] = surTiles[index];
 
-      // if (visitedTilesMatrix[tile.location.y][tile.location.x].visited) {
-      //   console.log("visited");
-      //   return;
-      // }
-
-      // const tileLocation = visitedTilesMatrix[tile.location.y][tile.location.x];
       visitedTilesMatrix[tile.location.y][tile.location.x].iteration = i;
       visitedTilesMatrix[tile.location.y][tile.location.x].visited = true;
-      // visitedTilesMatrix[tile.location.y][tile.location.x].char = visitedTilesMatrix[tile.location.y][tile.location.x]
-      //   .visited
-      //   ? TILES[tile.tile].replacementChar
-      //   : visitedTilesMatrix[tile.location.y][tile.location.x].char;
 
       maxInterationLocation.set(i, tile.location);
 
