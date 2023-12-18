@@ -3,11 +3,16 @@ import { readTextFileByPath } from "../../helpers";
 
 const inputPath = resolve(__dirname, "input.txt");
 
-const symbolRegex = new RegExp("[^\\w.]", "g");
 const digitRegex = new RegExp("\\d+", "g");
 const gearRegex = new RegExp("\\*", "g");
 
-const getSymbolLocations = (result: string) => [...result.matchAll(symbolRegex)].map((value) => Number(value.index));
+const getNumberLocations = (result: string) =>
+  [...result.matchAll(digitRegex)].map((value) => {
+    const matchingResult = value[0];
+    const startLocation = Number(value.index);
+    const endLocation = startLocation + (matchingResult.length - 1);
+    return { value: Number(matchingResult), startLocation, endLocation };
+  });
 
 const run = async () => {
   const input = await readTextFileByPath(inputPath);
@@ -17,47 +22,61 @@ const run = async () => {
   let accumulator = 0;
 
   resultsSplitByNewLine.forEach((result, index) => {
-    const numberLocations: Array<{
-      value: number;
-      startLocation: number;
-      endLocation: number;
+    const gearLocations: Array<{
+      location: number;
     }> = [];
 
-    [...result.matchAll(digitRegex)].forEach((value) => {
-      const matchingResult = value[0];
-      const startLocation = Number(value.index);
-      const endLocation = startLocation + (matchingResult.length - 1);
-
-      numberLocations.push({ value: Number(matchingResult), startLocation, endLocation });
+    [...result.matchAll(gearRegex)].forEach((value) => {
+      const location = Number(value.index);
+      gearLocations.push({ location: Number(location) });
     });
 
-    numberLocations.forEach((numberLocation) => {
-      const previousLineSymbolLocations = index > 0 ? getSymbolLocations(resultsSplitByNewLine[index - 1]) : [];
-      const sameLineSymbolLocations = getSymbolLocations(result);
-      const nextLineSymbolLocations =
-        index < resultsSplitByNewLine.length - 1 ? getSymbolLocations(resultsSplitByNewLine[index + 1]) : [];
+    gearLocations.forEach((gearLocation) => {
+      const previousLineNumberLocations = index > 0 ? getNumberLocations(resultsSplitByNewLine[index - 1]) : [];
+      const sameLineNumberLocations = getNumberLocations(result);
+      const nextLineNumberLocations =
+        index < resultsSplitByNewLine.length - 1 ? getNumberLocations(resultsSplitByNewLine[index + 1]) : [];
 
-      const { value, startLocation, endLocation } = numberLocation;
+      const previousLineNumbersNearGear = previousLineNumberLocations.filter(({ startLocation, endLocation }) => {
+        return (
+          startLocation - gearLocation.location === -1 ||
+          startLocation - gearLocation.location === 0 ||
+          startLocation - gearLocation.location === 1 ||
+          endLocation - gearLocation.location === -1 ||
+          endLocation - gearLocation.location === 0 ||
+          endLocation - gearLocation.location === 1
+        );
+      });
 
-      const hasSymbolInPerimeter =
-        sameLineSymbolLocations.some((location) => {
-          return location === startLocation - 1 || location === endLocation + 1;
-        }) ||
-        previousLineSymbolLocations.some((location) => {
-          return location >= startLocation - 1 && location <= endLocation + 1;
-        }) ||
-        nextLineSymbolLocations.some((location) => {
-          return location >= startLocation - 1 && location <= endLocation + 1;
-        });
+      const sameLineNumbersNearGear = sameLineNumberLocations.filter(({ startLocation, endLocation }) => {
+        return endLocation - gearLocation.location === -1 || startLocation - gearLocation.location === 1;
+      });
 
-      if (hasSymbolInPerimeter) {
-        accumulator += value;
+      const nextLineNumbersNearGear = nextLineNumberLocations.filter(({ startLocation, endLocation }) => {
+        return (
+          startLocation - gearLocation.location === -1 ||
+          startLocation - gearLocation.location === 0 ||
+          startLocation - gearLocation.location === 1 ||
+          endLocation - gearLocation.location === -1 ||
+          endLocation - gearLocation.location === 0 ||
+          endLocation - gearLocation.location === 1
+        );
+      });
+
+      const numbers = [...previousLineNumbersNearGear, ...sameLineNumbersNearGear, ...nextLineNumbersNearGear];
+
+      if (numbers.length === 2) {
+        const multiplied = numbers.reduce((prev, curr) => {
+          return prev * curr.value;
+        }, 1);
+
+        accumulator += multiplied;
       }
     });
   });
 
   console.log({ result: accumulator });
-  // { result: 527369 }
+  // { result: 73074886 }
 };
 
 run();
