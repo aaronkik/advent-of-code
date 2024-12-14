@@ -4,24 +4,25 @@
   "description": "Advent of Code",
   "scripts": {
     "start": "ts-node $1",
-    "lint": "eslint . --color --ext .ts",
+    "lint": "eslint . --color",
     "prettier": "prettier --check .",
     "watch": "tsc -w",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.8.2",
-    "@typescript-eslint/eslint-plugin": "^6.7.4",
-    "@typescript-eslint/parser": "^6.7.4",
+    "@eslint/compat": "1.2.3",
+    "@eslint/js": "9.15.0",
+    "@types/node": "20.8.2",
     "esbuild": "0.19.9",
-    "eslint": "^8.51.0",
-    "eslint-config-prettier": "^9.0.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.0.0",
-    "prettier": "3.1.1",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.3.2"
+    "eslint": "9.15.0",
+    "eslint-config-prettier": "9.0.0",
+    "husky": "9.1.7",
+    "lint-staged": "15.0.0",
+    "prettier": "3.4.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.2",
+    "typescript-eslint": "8.16.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown .",
